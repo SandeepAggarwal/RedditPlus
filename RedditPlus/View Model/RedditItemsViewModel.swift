@@ -12,6 +12,7 @@ import CoreGraphics
 protocol RedditItemsViewModelDelegate : class
 {
     func newRedditsAvailable(_ count: Int)
+    func requestStateChanged(_ state: NetworkRequestState)
 }
 
 class RedditItemsViewModel
@@ -19,7 +20,7 @@ class RedditItemsViewModel
     fileprivate var after: String?
     weak var delegate: RedditItemsViewModelDelegate?
     private var redditItems = [RedditItem]()
-    private var pendingRequest: Bool = false
+    private var requestState:NetworkRequestState = .Idle
    
     func getData()
     {
@@ -43,22 +44,25 @@ private extension RedditItemsViewModel
 {
     func loadData()
     {
-        if pendingRequest
+        if case NetworkRequestState.Fetching = requestState
         {
             return
         }
         
-        pendingRequest = true
+        requestState = .Fetching
+        delegate?.requestStateChanged(.Fetching)
         NetworkManager.shared.getNewReddits(after: after, onSuccess:
         {[weak self] (reddits, next) in
             self?.after = next
             self?.redditItems.append(contentsOf: reddits)
+            self?.requestState = .FetchingCompleted
             self?.delegate?.newRedditsAvailable(reddits.count)
-            self?.pendingRequest = false
+            self?.delegate?.requestStateChanged(.FetchingCompleted)
         })
         {[weak self] (error) in
             print("error: \(error)")
-            self?.pendingRequest = false
+            self?.requestState = .FetchError(error)
+            self?.delegate?.requestStateChanged(.FetchError(error))
         }
     }
 }

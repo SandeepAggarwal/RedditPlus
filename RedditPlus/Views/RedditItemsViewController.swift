@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SVProgressHUD
 
 class RedditItemsViewController: UIViewController
 {
@@ -24,6 +25,7 @@ class RedditItemsViewController: UIViewController
         
         edgesForExtendedLayout = []
         title = "Reddit Plus"
+        view.backgroundColor = .white
         
         let tableVC = UITableViewController()
         addChildViewController(tableVC)
@@ -116,5 +118,26 @@ extension RedditItemsViewController: RedditItemsViewModelDelegate
             indexPaths.append(IndexPath.init(row: lastCount + row, section: 0))
         }
         tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+    }
+    
+    func requestStateChanged(_ state: NetworkRequestState)
+    {
+        switch state
+        {
+        case .Idle:
+            break
+            
+        case .Fetching:
+            SVProgressHUD.show()
+            break
+            
+        case .FetchingCompleted:
+            SVProgressHUD.dismiss()
+            break
+            
+        case .FetchError(_):
+            SVProgressHUD.dismiss()
+            break
+        }
     }
 }
