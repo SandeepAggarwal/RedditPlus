@@ -34,7 +34,7 @@ class RedditItemsViewModel
     func redditItemViewModel(at index: Int) -> RedditItemViewModel
     {
         let item = redditItems[index]
-        return RedditItemViewModel(id: item.id, thumnailURL: item.thumbnailURL, thumbnailWidth: item.thumbnailWidth, thumbnailHeight: item.thumnailHeight, author: item.author, title: item.title)
+        return RedditItemViewModel(item: item)
     }
     
     

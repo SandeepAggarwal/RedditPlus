@@ -16,7 +16,7 @@ struct RedditItem
     let title: String
     let thumbnailURL : URL?
     let thumbnailWidth: CGFloat?
-    let thumnailHeight: CGFloat?
+    let thumbnailHeight: CGFloat?
     
     static func objectFromDictionary(dict: [String:AnyObject]) -> RedditItem?
     {
@@ -24,8 +24,8 @@ struct RedditItem
         let author = dict["author"] as! String
         let title = dict["title"] as! String
         let thumbnailString = dict["thumbnail"] as? String
-        let thumnailWidth = dict["thumbnail_width"] as? CGFloat
-        let thumnailHeight = dict["thumbnail_height"] as? CGFloat
+        let thumbnailWidth = dict["thumbnail_width"] as? CGFloat
+        let thumbnailHeight = dict["thumbnail_height"] as? CGFloat
         
         var thumbnailURL: URL?
         if let string = thumbnailString
@@ -37,7 +37,7 @@ struct RedditItem
             }
         }
         
-        return RedditItem(id: id, author: author, title: title, thumbnailURL: thumbnailURL, thumbnailWidth: thumnailWidth, thumnailHeight: thumnailHeight)
+        return RedditItem(id: id, author: author, title: title, thumbnailURL: thumbnailURL, thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight)
     }
     
 }

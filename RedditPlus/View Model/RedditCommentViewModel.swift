@@ -15,12 +15,12 @@ class RedditCommentViewModel
     let authorName: String
     let timeAgo: String
     
-    init(id: String, body: String, authorName: String, time_utc: Int)
+    init(comment: RedditComment)
     {
-        self.id = id
-        self.body = body
-        self.authorName = authorName
-        self.timeAgo = RedditCommentViewModel.timeAgoSinceDate(Date.init(timeIntervalSince1970: TimeInterval.init(time_utc)))
+        self.id = comment.id
+        self.body = comment.body
+        self.authorName = comment.authorName
+        self.timeAgo = RedditCommentViewModel.timeAgoSinceDate(Date.init(timeIntervalSince1970: TimeInterval.init(comment.created_utc)))
     }
 }
 

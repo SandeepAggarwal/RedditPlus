@@ -19,14 +19,14 @@ class RedditItemViewModel
     let author: String
     let title: String
     
-    init(id: String, thumnailURL: URL?, thumbnailWidth: CGFloat?, thumbnailHeight: CGFloat?, author: String, title: String)
+    init(item: RedditItem)
     {
-        self.id = id;
-        self.thumnailURL = thumnailURL
-        self.thumbnailWidth = thumbnailWidth
-        self.thumbnailHeight = thumbnailHeight
-        self.author = author
-        self.title = title
+        self.id = item.id;
+        self.thumnailURL = item.thumbnailURL
+        self.thumbnailWidth = item.thumbnailWidth
+        self.thumbnailHeight = item.thumbnailHeight
+        self.author = item.author
+        self.title = item.title
     }
     
     func redditCommentsViewModel() -> RedditCommentsViewModel
