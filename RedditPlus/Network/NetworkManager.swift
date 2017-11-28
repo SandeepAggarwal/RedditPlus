@@ -34,9 +34,13 @@ class NetworkManager
     }
     
     
-    func getNewReddits( onSuccess: @escaping (([RedditItem]) -> Void), onError: @escaping ((Error) -> Void) )
+    func getNewReddits(after: String?, onSuccess: @escaping (([RedditItem], _ after: String?) -> Void), onError: @escaping ((Error) -> Void) )
     {
-        let endPoint = Endpoint.base + Endpoint.newReddits
+        var endPoint = Endpoint.base + Endpoint.newReddits
+        if let after = after
+        {
+            endPoint.append("?after=\(after)")
+        }
         let url = URL.init(string: endPoint)
         let request = URLRequest.init(url: url!)
         
@@ -63,6 +67,12 @@ class NetworkManager
                         return
                     }
                     
+                    var after = data_root["after"]
+                    if after is NSNull
+                    {
+                        after = nil
+                    }
+                    
                     var redditItems = [RedditItem]()
                     for dict in children
                     {
@@ -75,13 +85,13 @@ class NetworkManager
                             redditItems.append(item)
                         }
                     }
-                    onSuccess(redditItems)
+                    onSuccess(redditItems,after as? String)
                     return
                 }
                 else
                 {
                     print("empty!!!")
-                    onSuccess([])
+                    onSuccess([],nil)
                     return
                 }
             }

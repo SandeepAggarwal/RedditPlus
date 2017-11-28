@@ -16,8 +16,8 @@ class RedditItemsViewController: UIViewController
         static let cellIdentifier = "RedditcellIdentifier "
     }
     
+    let viewModel = RedditItemsViewModel()
     var tableView: UITableView!
-    var redditItems = [RedditItem]()
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -33,8 +33,8 @@ class RedditItemsViewController: UIViewController
         registerCells()
         tableVC.didMove(toParentViewController: self)
         
-        loadData()
-        
+        viewModel.delegate = self
+        viewModel.getData()
     }
     
     override func viewDidLayoutSubviews()
@@ -47,17 +47,6 @@ class RedditItemsViewController: UIViewController
 
 private extension RedditItemsViewController
 {
-    func loadData()
-    {
-        NetworkManager.shared.getNewReddits(onSuccess:
-        {[weak self] (reddits) in
-            self?.redditItems = reddits
-            self?.tableView.reloadData()
-        }) { (error) in
-            print("error: \(error)")
-        }
-    }
-    
     func customiseTable()
     {
         tableView.estimatedRowHeight = 200
@@ -79,7 +68,7 @@ private extension RedditItemsViewController
 extension RedditItemsViewController: UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return redditItems.count
+        return viewModel.numberReddits()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,10 +77,15 @@ extension RedditItemsViewController: UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let item = redditItems[indexPath.row]
+        let index = indexPath.row
+        let url = viewModel.imageURLForItem(at: index)
+        let thumbnailWidth = viewModel.thumbnailWidthForItem(at: index)
+        let thumbnailHeight = viewModel.thumbnailHeightForItem(at: index)
+        let author = viewModel.authorNameForItem(at: index)
+        let title = viewModel.titleForItem(at: index)
         
         let cell: RedditItemCell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! RedditItemCell
-        cell.bindModel(item)
+        cell.bindModel(url: url, thumbWidth: thumbnailWidth, thumbHeight: thumbnailHeight , author: author,title: title)
         return cell
     }
 }
@@ -101,5 +95,28 @@ extension RedditItemsViewController: UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         
+    }
+    
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
+        if indexPath.row == viewModel.numberReddits() - 1
+        {
+            viewModel.getData()
+        }
+    }
+}
+
+extension RedditItemsViewController: RedditItemsViewModelDelegate
+{
+    func newRedditsAvailable(_ count: Int)
+    {
+        let lastCount = viewModel.numberReddits() - count
+        var indexPaths = [IndexPath]()
+        for row in 0 ..< count
+        {
+            indexPaths.append(IndexPath.init(row: lastCount + row, section: 0))
+        }
+        tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
 }
