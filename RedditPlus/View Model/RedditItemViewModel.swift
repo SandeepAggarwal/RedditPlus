@@ -31,6 +31,6 @@ class RedditItemViewModel
     
     func redditCommentsViewModel() -> RedditCommentsViewModel
     {
-        return RedditCommentsViewModel(postID: id, postTitle: title)
+        return RedditCommentsViewModel(itemViewModel: self)
     }
 }

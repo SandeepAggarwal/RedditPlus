@@ -10,16 +10,23 @@ import Foundation
 import UIKit
 import SVProgressHUD
 
+enum RedditCommentsViewControllerSection: Int
+{
+    case Item = 0
+    case Comments
+    case TotalSections
+}
+
 class RedditCommentsViewController: UIViewController
 {
     struct Constants
     {
-        static let cellIdentifier = "RedditCommentCellIdentifier "
+        static let itemCellIdentifier = "RedditItemCellIdentifier"
+        static let commentCellIdentifier = "RedditCommentCellIdentifier"
     }
     
     var viewModel : RedditCommentsViewModel!
     var tableView: UITableView!
-    var noCommentsLabel:UILabel!
     
     init(viewModel : RedditCommentsViewModel)
     {
@@ -39,12 +46,6 @@ class RedditCommentsViewController: UIViewController
         title = viewModel.postTitle
         view.backgroundColor = .white
         
-        noCommentsLabel = UILabel()
-        noCommentsLabel.font = UIFont.systemFont(ofSize: 18)
-        noCommentsLabel.textColor = UIColor.black
-        noCommentsLabel.text = "No comments yet"
-        noCommentsLabel.isHidden = true
-        view.addSubview(noCommentsLabel)
         
         let tableVC = UITableViewController()
         addChildViewController(tableVC)
@@ -61,9 +62,6 @@ class RedditCommentsViewController: UIViewController
     override func viewDidLayoutSubviews()
     {
         super.viewDidLayoutSubviews()
-        
-        noCommentsLabel.sizeToFit()
-        noCommentsLabel.center = view.center
         
         tableView.frame = view.bounds
     }
@@ -85,39 +83,71 @@ private extension RedditCommentsViewController
     
     func registerCells()
     {
-        tableView.register(RedditCommentCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
+        tableView.register(RedditItemExpandedCell.self, forCellReuseIdentifier: Constants.itemCellIdentifier)
+        tableView.register(RedditCommentCell.self, forCellReuseIdentifier: Constants.commentCellIdentifier)
     }
 }
 
 extension RedditCommentsViewController: UITableViewDataSource
 {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberComments()
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        var count = 0
+        switch section
+        {
+            case RedditCommentsViewControllerSection.Item.rawValue:
+                count = 1
+            break
+            
+            case RedditCommentsViewControllerSection.Comments.rawValue:
+                count = viewModel.numberComments()
+            break
+        
+            default:
+            break
+        }
+        
+        return count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return RedditCommentsViewControllerSection.TotalSections.rawValue
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let index = indexPath.row
+        let section = indexPath.section
         
-        let cell: RedditCommentCell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! RedditCommentCell
-        cell.bindViewModel(viewModel.redditCommentViewModel(at: index))
-        return cell
+        if section == RedditCommentsViewControllerSection.Item.rawValue
+        {
+            let cell: RedditItemExpandedCell = tableView.dequeueReusableCell(withIdentifier: Constants.itemCellIdentifier, for: indexPath) as! RedditItemExpandedCell
+            cell.bindViewModel(viewModel.itemViewModel)
+            return cell
+        }
+        else
+        {
+            let index = indexPath.row
+            
+            let cell: RedditCommentCell = tableView.dequeueReusableCell(withIdentifier: Constants.commentCellIdentifier, for: indexPath) as! RedditCommentCell
+            cell.bindViewModel(viewModel.redditCommentViewModel(at: index))
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
+        var title: String? = nil
+        if section == RedditCommentsViewControllerSection.Comments.rawValue
+        {
+            title = "Top Comments"
+        }
+        return title
     }
 }
 
 extension RedditCommentsViewController: UITableViewDelegate
 {
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
-    {
-        if indexPath.row == viewModel.numberComments() - 1
-        {
-            viewModel.loadComments()
-        }
-    }
+    
 }
 
 
@@ -148,18 +178,13 @@ extension RedditCommentsViewController: RedditCommentsViewModelDelegate
     {
         let totalComments = viewModel.numberComments()
         
-        if totalComments == 0
+        if totalComments > 0
         {
-            noCommentsLabel.isHidden = false
-        }
-        else
-        {
-            noCommentsLabel.isHidden = true
             let lastCount = totalComments - count
             var indexPaths = [IndexPath]()
             for row in 0 ..< count
             {
-                indexPaths.append(IndexPath.init(row: lastCount + row, section: 0))
+                indexPaths.append(IndexPath.init(row: lastCount + row, section: RedditCommentsViewControllerSection.Comments.rawValue))
             }
             tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
         }

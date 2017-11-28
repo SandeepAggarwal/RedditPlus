@@ -30,11 +30,13 @@ class RedditCommentsViewModel
     private let postID: String
     private var comments = [RedditComment]()
     private var requestState:NetworkRequestState = .Idle
+    let itemViewModel: RedditItemViewModel
     
-    init(postID: String, postTitle: String)
+    init(itemViewModel: RedditItemViewModel)
     {
-        self.postID = postID
-        self.postTitle = postTitle
+        self.itemViewModel = itemViewModel
+        self.postID = itemViewModel.id
+        self.postTitle = itemViewModel.title
         requestState = .Idle
     }
     
