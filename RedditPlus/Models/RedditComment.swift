@@ -14,6 +14,7 @@ struct RedditComment
     let id: String
     let body: String
     let authorName: String
+    let created_utc: Int
     let after: String?
     
     static func objectFromDictionary(dict: [String:AnyObject], after: String?) -> RedditComment?
@@ -24,7 +25,8 @@ struct RedditComment
         
         let id = dict["id"] as! String
         let author = dict["author"] as! String
+        let created_at = dict["created_utc"] as! Int
         
-        return RedditComment(id: id, body: bodyString, authorName: author, after: after)
+        return RedditComment(id: id, body: bodyString, authorName: author, created_utc: created_at, after: after)
     }
 }

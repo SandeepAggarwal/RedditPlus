@@ -47,7 +47,7 @@ class RedditCommentsViewModel
     func redditCommentViewModel(at index: Int) -> RedditCommentViewModel
     {
         let comment = comments[index]
-        return RedditCommentViewModel(id: comment.id,body: comment.body, authorName: comment.authorName)
+        return RedditCommentViewModel(id: comment.id,body: comment.body, authorName: comment.authorName, time_utc: comment.created_utc)
     }
     
     func loadComments()

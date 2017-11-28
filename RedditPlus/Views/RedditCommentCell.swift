@@ -13,6 +13,7 @@ import SDWebImage
 class RedditCommentCell: UITableViewCell
 {
     var authorLabel: UILabel!
+    var dateLabel: UILabel!
     var bodyLabel: UILabel!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
@@ -24,6 +25,12 @@ class RedditCommentCell: UITableViewCell
         authorlabel.textColor = UIColor.lightGray
         self.authorLabel = authorlabel
         contentView.addSubview(authorlabel)
+        
+        let datelabel = UILabel.init()
+        datelabel.font = UIFont.systemFont(ofSize: 14)
+        datelabel.textColor = UIColor.lightGray
+        self.dateLabel = datelabel
+        contentView.addSubview(datelabel)
         
         let bodylabel = UILabel.init()
         bodylabel.font = UIFont.systemFont(ofSize: 15)
@@ -39,6 +46,10 @@ class RedditCommentCell: UITableViewCell
         contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1.0, constant: xPadding))
         contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: -xPadding))
         contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: yPadding))
+        
+        datelabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addConstraint(NSLayoutConstraint.init(item: self.dateLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: -xPadding))
+        contentView.addConstraint(NSLayoutConstraint.init(item: self.dateLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: yPadding))
         
         
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -57,5 +68,6 @@ class RedditCommentCell: UITableViewCell
     {
         authorLabel.text = comment.authorName
         bodyLabel.text = comment.body
+        dateLabel.text = comment.timeAgo
     }
 }
