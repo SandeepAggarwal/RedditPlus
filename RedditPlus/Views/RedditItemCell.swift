@@ -63,7 +63,7 @@ class RedditItemCell: UITableViewCell
         authorlabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .leading, relatedBy: .equal, toItem: self.imgView, attribute: .trailing, multiplier: 1.0, constant: xPadding))
         contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: -xPadding))
-        contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 0))
+        contentView.addConstraint(NSLayoutConstraint.init(item: self.authorLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: yPadding))
         
         
         titlelabel.translatesAutoresizingMaskIntoConstraints = false
