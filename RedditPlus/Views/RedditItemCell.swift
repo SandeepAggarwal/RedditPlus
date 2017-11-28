@@ -77,14 +77,14 @@ class RedditItemCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bindModel(url: URL?, thumbWidth: CGFloat?, thumbHeight: CGFloat?, author: String, title: String)
+    func bindViewModel(_ item : RedditItemViewModel)
     {
-        authorLabel.text = author
-        titleLabel.text = title
+        authorLabel.text = item.author
+        titleLabel.text = item.title
         
-        if let url = url
+        if let url = item.thumnailURL
         {
-            let aspectRatio:CGFloat = thumbHeight!/thumbWidth!
+            let aspectRatio:CGFloat = item.thumbnailHeight!/item.thumbnailWidth!
             imageWidthConstraint.constant = min(imageSide/aspectRatio, bounds.size.width*0.5)
             imgView.layer.borderWidth = 1.0
             imgView?.sd_setImageWithPreviousCachedImage(with: url, placeholderImage: nil, options: SDWebImageOptions.cacheMemoryOnly, progress: nil, completed: nil)

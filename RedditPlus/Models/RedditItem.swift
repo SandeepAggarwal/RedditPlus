@@ -11,6 +11,7 @@ import CoreGraphics
 
 struct RedditItem
 {
+    let id: String
     let author: String
     let title: String
     let thumbnailURL : URL?
@@ -19,6 +20,7 @@ struct RedditItem
     
     static func objectFromDictionary(dict: [String:AnyObject]) -> RedditItem?
     {
+        let id = dict["id"] as! String
         let author = dict["author"] as! String
         let title = dict["title"] as! String
         let thumbnailString = dict["thumbnail"] as? String
@@ -35,7 +37,7 @@ struct RedditItem
             }
         }
         
-        return RedditItem(author: author, title: title, thumbnailURL: thumbnailURL, thumbnailWidth: thumnailWidth, thumnailHeight: thumnailHeight)
+        return RedditItem(id: id, author: author, title: title, thumbnailURL: thumbnailURL, thumbnailWidth: thumnailWidth, thumnailHeight: thumnailHeight)
     }
     
 }

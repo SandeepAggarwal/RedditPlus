@@ -78,14 +78,9 @@ extension RedditItemsViewController: UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let index = indexPath.row
-        let url = viewModel.imageURLForItem(at: index)
-        let thumbnailWidth = viewModel.thumbnailWidthForItem(at: index)
-        let thumbnailHeight = viewModel.thumbnailHeightForItem(at: index)
-        let author = viewModel.authorNameForItem(at: index)
-        let title = viewModel.titleForItem(at: index)
         
         let cell: RedditItemCell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! RedditItemCell
-        cell.bindModel(url: url, thumbWidth: thumbnailWidth, thumbHeight: thumbnailHeight , author: author,title: title)
+        cell.bindViewModel(viewModel.redditItemViewModel(at: index))
         return cell
     }
 }
@@ -94,7 +89,10 @@ extension RedditItemsViewController: UITableViewDelegate
 {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+        let index = indexPath.row
         
+        let vc = RedditCommentsViewController(viewModel: viewModel.redditItemViewModel(at: index).redditCommentsViewModel())
+        show(vc, sender: nil)
     }
     
 

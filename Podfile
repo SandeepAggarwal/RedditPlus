@@ -15,6 +15,7 @@ target 'RedditPlus' do
   pod 'AFNetworking', '~> 3.0'
   pod 'SDWebImage', '~> 4.0'
   pod 'ResponseDetective'
+  pod 'SVProgressHUD'
 
   target 'RedditPlusTests' do
     inherit! :search_paths

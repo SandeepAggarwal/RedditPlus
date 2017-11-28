@@ -30,25 +30,13 @@ class RedditItemsViewModel
         return redditItems.count
     }
     
-    func imageURLForItem(at index: Int) -> URL? {
-        return redditItems[index].thumbnailURL
+    func redditItemViewModel(at index: Int) -> RedditItemViewModel
+    {
+        let item = redditItems[index]
+        return RedditItemViewModel(id: item.id, thumnailURL: item.thumbnailURL, thumbnailWidth: item.thumbnailWidth, thumbnailHeight: item.thumnailHeight, author: item.author, title: item.title)
     }
     
-    func thumbnailHeightForItem(at index: Int) -> CGFloat? {
-        return redditItems[index].thumnailHeight
-    }
     
-    func thumbnailWidthForItem(at index: Int) -> CGFloat? {
-        return redditItems[index].thumbnailWidth
-    }
-    
-    func titleForItem(at index: Int) -> String {
-        return redditItems[index].title
-    }
-    
-    func authorNameForItem(at index: Int) -> String {
-        return redditItems[index].author
-    }
 }
 
 private extension RedditItemsViewModel
